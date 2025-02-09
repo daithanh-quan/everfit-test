@@ -43,12 +43,14 @@ const WorkoutCalendar = () => {
   }, []);
 
   const onDragEnd = (result: DropResult) => {
-    const { source, destination, type } = result;
+    const { source, destination, type, draggableId } = result;
     setDragDestination(null);
 
     if (!destination) {
       return;
     }
+
+    console.log(draggableId);
 
     if (type === "workout") {
       const newData = { ...calendarData };
@@ -154,7 +156,7 @@ const WorkoutCalendar = () => {
 
                           return (
                             <Draggable
-                              key={workoutId}
+                              key={`${workoutId}-${index}`}
                               draggableId={`${workoutId}-${index}-${dayKey}`}
                               index={index}
                             >
