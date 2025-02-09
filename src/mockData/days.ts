@@ -9,7 +9,7 @@ export const daysData: Record<string, Days> = {
   wednesday: {
     id: "wednesday",
     isCreateNewWorkout: false,
-    workouts: ["workout-2", "workout-3", "workout-4", "workout-1"],
+    workouts: ["workout-2", "workout-3", "workout-4"],
   },
   thursday: {
     id: "thursday",
