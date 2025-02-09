@@ -48,7 +48,6 @@ const WorkoutCalendar = () => {
 
     if (!destination) return;
 
-    // Same droppable - no need to do anything
     if (
       source.droppableId === destination.droppableId &&
       source.index === destination.index
@@ -57,7 +56,6 @@ const WorkoutCalendar = () => {
     }
 
     if (type === "workout") {
-      // Handle workout dragging
       const newData = { ...calendarData };
       const sourceDayWorkouts = [...newData.days[source.droppableId].workouts];
       const targetDayWorkouts = [
