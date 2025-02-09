@@ -43,13 +43,19 @@ const WorkoutCalendar = () => {
   }, []);
 
   const onDragEnd = (result: DropResult) => {
-    const { source, destination, type, draggableId } = result;
+    const { source, destination, type } = result;
     setDragDestination(null);
 
     if (!destination) return;
 
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return;
+    }
+
     if (type === "workout") {
-      // Handle workout dragging (existing code)
       const newData = { ...calendarData };
       const sourceDayWorkouts = [...newData.days[source.droppableId].workouts];
       const targetDayWorkouts = [
@@ -74,20 +80,23 @@ const WorkoutCalendar = () => {
       }
       setCalendarData(newData);
     } else if (type === "exercise") {
-      // Handle exercise dragging
+      if (source.droppableId !== destination.droppableId) {
+        return;
+      }
       const newData = { ...calendarData };
-
-      const [workoutId] = draggableId.split("-")[0].split("_");
+      const workoutId = source.droppableId.split("_")[0];
       const workout = newData.workouts[workoutId];
 
       if (workout) {
-        const exercises = [...workout.exercises];
-        const [movedExercise] = exercises.splice(source.index, 1);
-        exercises.splice(destination.index, 0, movedExercise);
+        const newExercises = Array.from(workout.exercises);
+        const [movedExercise] = newExercises.splice(source.index, 1);
+        newExercises.splice(destination.index, 0, movedExercise);
+
         newData.workouts[workoutId] = {
           ...workout,
-          exercises: exercises,
+          exercises: newExercises,
         };
+
         setCalendarData(newData);
       }
     }
@@ -173,7 +182,7 @@ const WorkoutCalendar = () => {
                               draggableId={`${workoutId}-${index}-${dayKey}`}
                               index={index}
                             >
-                              {(provided) => (
+                              {(provided, snapshot) => (
                                 <div
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
@@ -191,6 +200,7 @@ const WorkoutCalendar = () => {
                                   <Droppable
                                     droppableId={`${workoutId}_exercises`}
                                     type="exercise"
+                                    isDropDisabled={snapshot.isDragging} // Disable dropping when workout is being dragged
                                   >
                                     {(providedExercises) => (
                                       <div
