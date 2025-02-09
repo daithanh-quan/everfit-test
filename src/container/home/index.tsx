@@ -43,14 +43,12 @@ const WorkoutCalendar = () => {
   }, []);
 
   const onDragEnd = (result: DropResult) => {
-    const { source, destination, type, draggableId } = result;
+    const { source, destination, type } = result;
     setDragDestination(null);
 
     if (!destination) {
       return;
     }
-
-    console.log(draggableId);
 
     if (type === "workout") {
       const newData = { ...calendarData };
