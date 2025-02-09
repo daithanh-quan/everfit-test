@@ -1,0 +1,259 @@
+.container {
+    max-width: 1300px;
+    margin: 70px auto;
+    height: calc(100vh - 140px);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 9px;
+    height: 100%;
+}
+
+.dayContainer {
+    background-color: var(--secondary-color);
+    position: relative;
+    padding: 5px;
+    width: 169px;
+    height: 100%;
+    min-height: 600px;
+    border-radius: 6px;
+}
+
+.dayHeader {
+    margin-bottom: 10px;
+}
+
+.dayName {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--day-color);
+    line-height: 13.62px;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.dayDateHeader {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.plusIcon {
+    cursor: pointer;
+}
+
+.dayDate {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--day-color);
+    line-height: 14.98px;
+    letter-spacing: 0;
+}
+
+.dayDateToday {
+    font-size: 11px;
+    color: var(--purple);
+    font-weight: 700;
+}
+
+.workoutCard {
+    background-color: white;
+    border-radius: 6px;
+    border: 1px solid rgba(34, 36, 38, 0.15);
+    padding: 4px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.workoutCard:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.workout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.workoutIcon {
+    cursor: pointer;
+}
+
+.workoutTitle {
+    color: var(--purple);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 0 0 80%;
+    margin-bottom: 5px
+}
+
+.exerciseCard {
+    background-color: white;
+    padding: 5px;
+    border: 1px solid #DFDFDF;
+    margin-bottom: 5px;
+    border-radius: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.exerciseReps {
+    font-size: 10px;
+    color: #919CAD;
+    font-weight: 700;
+    text-align: left;
+}
+
+.exerciseInfo {
+    width: 80%;
+}
+
+.exerciseName {
+    font-size: 13px;
+    text-align: right;
+    color: var(--black);
+    line-height: 17.7px;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.exerciseDetails {
+    font-size: 10px;
+    color: #95A6B7;
+    line-height: 13.62px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.exercisePlusIcon {
+    display: flex;
+    justify-content: end;
+}
+
+.draggable {
+    cursor: move;
+    user-select: none;
+}
+
+.draggable:active {
+    opacity: 0.9;
+}
+
+.dragOverStyle {
+    background-color: #5A57CB63;
+    position: relative;
+    padding: 5px;
+    width: 169px;
+    height: 100%;
+    min-height: 600px;
+    border-radius: 6px;
+}
+
+.dragHandle {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Skeleton Styles */
+.skeletonGrid {
+    composes: grid;
+}
+
+.skeletonColumn {
+    composes: droppable;
+    background: #fff;
+}
+
+.skeletonDayHeader {
+    composes: dayHeader;
+}
+
+.skeletonDayName {
+    height: 24px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    width: 60%;
+    margin: 0 auto;
+}
+
+.skeletonWorkoutCard {
+    background: #f3f4f6;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    padding: 12px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeletonWorkoutTitle {
+    height: 20px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    width: 70%;
+    margin-bottom: 12px;
+}
+
+.skeletonExercise {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    gap: 8px;
+}
+
+.skeletonExerciseReps {
+    height: 16px;
+    width: 24px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.skeletonExerciseContent {
+    flex: 1;
+}
+
+.skeletonExerciseName {
+    height: 16px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    width: 60%;
+    margin-bottom: 4px;
+}
+
+.skeletonExerciseDetails {
+    height: 16px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    width: 80%;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .5;
+    }
+}
+
