@@ -46,11 +46,18 @@ const WorkoutCalendar = () => {
     const { source, destination, type } = result;
     setDragDestination(null);
 
-    if (!destination) {
+    if (!destination) return;
+
+    // Same droppable - no need to do anything
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
       return;
     }
 
     if (type === "workout") {
+      // Handle workout dragging
       const newData = { ...calendarData };
       const sourceDayWorkouts = [...newData.days[source.droppableId].workouts];
       const targetDayWorkouts = [
@@ -73,8 +80,27 @@ const WorkoutCalendar = () => {
         newData.days[source.droppableId].workouts = sourceDayWorkouts;
         newData.days[destination.droppableId].workouts = targetDayWorkouts;
       }
-
       setCalendarData(newData);
+    } else if (type === "exercise") {
+      if (source.droppableId !== destination.droppableId) {
+        return;
+      }
+      const newData = { ...calendarData };
+      const workoutId = source.droppableId.split("_")[0];
+      const workout = newData.workouts[workoutId];
+
+      if (workout) {
+        const newExercises = Array.from(workout.exercises);
+        const [movedExercise] = newExercises.splice(source.index, 1);
+        newExercises.splice(destination.index, 0, movedExercise);
+
+        newData.workouts[workoutId] = {
+          ...workout,
+          exercises: newExercises,
+        };
+
+        setCalendarData(newData);
+      }
     }
   };
 
@@ -158,7 +184,7 @@ const WorkoutCalendar = () => {
                               draggableId={`${workoutId}-${index}-${dayKey}`}
                               index={index}
                             >
-                              {(provided) => (
+                              {(provided, snapshot) => (
                                 <div
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
@@ -173,39 +199,89 @@ const WorkoutCalendar = () => {
                                       className={styles.workoutIcon}
                                     />
                                   </div>
-                                  {workout.exercises.map((exerciseId) => {
-                                    const exercise =
-                                      calendarData.exercises[exerciseId];
-                                    return (
+                                  <Droppable
+                                    droppableId={`${workoutId}_exercises`}
+                                    type="exercise"
+                                    isDropDisabled={snapshot.isDragging} // Disable dropping when workout is being dragged
+                                  >
+                                    {(providedExercises) => (
                                       <div
-                                        key={exercise.id}
-                                        className={`${styles.exerciseCard} ${styles.draggable}`}
+                                        ref={providedExercises.innerRef}
+                                        {...providedExercises.droppableProps}
                                       >
-                                        <div className={styles.exerciseReps}>
-                                          {exercise.sets.length}x
-                                        </div>
-                                        <div className={styles.exerciseInfo}>
-                                          <div className={styles.exerciseName}>
-                                            {exercise.name}
-                                          </div>
-                                          <div
-                                            className={styles.exerciseDetails}
-                                          >
-                                            {exercise.sets.map(
-                                              (set, idx) =>
-                                                `${set.weight} lb x ${
-                                                  set.reps
-                                                }${
-                                                  idx < exercise.sets.length - 1
-                                                    ? ", "
-                                                    : ""
-                                                }`
-                                            )}
-                                          </div>
-                                        </div>
+                                        {workout.exercises.map(
+                                          (exerciseId, exerciseIndex) => {
+                                            const exercise =
+                                              calendarData.exercises[
+                                                exerciseId
+                                              ];
+
+                                            return (
+                                              <Draggable
+                                                key={`${workoutId}_${exerciseId}`}
+                                                draggableId={`${workoutId}_${dayKey}_${exercise.id}_${exerciseIndex}`}
+                                                index={exerciseIndex}
+                                              >
+                                                {(providedExercise) => (
+                                                  <div
+                                                    ref={
+                                                      providedExercise.innerRef
+                                                    }
+                                                    {...providedExercise.draggableProps}
+                                                    {...providedExercise.dragHandleProps}
+                                                    className={
+                                                      styles.exerciseCard
+                                                    }
+                                                  >
+                                                    <div
+                                                      className={
+                                                        styles.exerciseReps
+                                                      }
+                                                    >
+                                                      {exercise.sets.length}x
+                                                    </div>
+                                                    <div
+                                                      className={
+                                                        styles.exerciseInfo
+                                                      }
+                                                    >
+                                                      <div
+                                                        className={
+                                                          styles.exerciseName
+                                                        }
+                                                      >
+                                                        {exercise.name}
+                                                      </div>
+                                                      <div
+                                                        className={
+                                                          styles.exerciseDetails
+                                                        }
+                                                      >
+                                                        {exercise.sets.map(
+                                                          (set, idx) =>
+                                                            `${
+                                                              set.weight
+                                                            } lb x ${set.reps}${
+                                                              idx <
+                                                              exercise.sets
+                                                                .length -
+                                                                1
+                                                                ? ", "
+                                                                : ""
+                                                            }`
+                                                        )}
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                )}
+                                              </Draggable>
+                                            );
+                                          }
+                                        )}
+                                        {providedExercises.placeholder}
                                       </div>
-                                    );
-                                  })}
+                                    )}
+                                  </Droppable>
                                   <div className={styles.exercisePlusIcon}>
                                     <PlusIcon className={styles.plusIcon} />
                                   </div>
